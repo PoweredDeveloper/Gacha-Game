@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float Speed = 0.5f;
+    public float walkingSpeed = 4f;
+    public float runningSpeed = 4.5f;
+
+    public float Stamina = 20f;
     public float moveRotaion = 5f;
 
+    public float runningDustEmission = 25f;
+    public float walkingDustEmission = 5f;
+
+    public KeyCode runningKey = KeyCode.LeftControl;
+
     private float rotationSpeed = 5f;
+    private float currentSpeed = 0f;
     private bool isDust = false;
+    private bool lastRotatedLeft = false;
 
     private float horizontal;
     private float vertical;
@@ -18,6 +28,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        currentSpeed = walkingSpeed;
         rb = GetComponent<Rigidbody2D>();
         dust_ps = transform.GetChild(0).GetComponent<ParticleSystem>();
     }
@@ -27,32 +38,54 @@ public class Player : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        if (horizontal != 0)
+
+        var dustEmission = dust_ps.emission;
+
+        if (Input.GetKeyDown(runningKey))
         {
-            if (!isDust) {
+            dustEmission.rateOverTime = runningDustEmission;
+            currentSpeed = runningSpeed;
+        }
+        else if (Input.GetKeyUp(runningKey))
+        {
+            dustEmission.rateOverTime = walkingDustEmission;
+            currentSpeed = walkingSpeed;
+        }
+
+        if (horizontal != 0 || vertical != 0)
+        {
+            if (!isDust)
+            {
                 dust_ps.Play();
                 isDust = true;
             }
             if (horizontal > 0)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, -moveRotaion), rotationSpeed * Time.deltaTime);
+                RotateCharacter(new Vector3(0, 0, -moveRotaion), rotationSpeed);
+                lastRotatedLeft = false;
             }
             else
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 180, -moveRotaion), rotationSpeed * Time.deltaTime); 
+                RotateCharacter(new Vector3(0, 180, -moveRotaion), rotationSpeed);
+                lastRotatedLeft = true;
             }
         }
         else
         {
             dust_ps.Stop();
             isDust = false;
-            Quaternion rotationReset = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), 5 * Time.deltaTime);
-            transform.rotation = rotationReset;
+            RotateCharacter(lastRotatedLeft ? new Vector3(0, 180, 0) : Vector3.zero, rotationSpeed);
         }
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(horizontal * Speed, vertical * Speed);
+        rb.velocity = new Vector2(horizontal * currentSpeed, vertical * currentSpeed);
+    }
+
+    private void RotateCharacter(Vector3 rotation, float rotationSpeed)
+    {
+        Quaternion rotateQuanternion = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rotation), rotationSpeed * Time.deltaTime);
+        transform.rotation = rotateQuanternion;
     }
 }
