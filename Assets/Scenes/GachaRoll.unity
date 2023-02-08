@@ -6774,19 +6774,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80aa0d7fe7138594d95bf4fab561f1e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  droppedCharacters: []
   uniqueCharacters:
   - {fileID: 11400000, guid: 9c86d7dad260b1045b20c8e32b36fd1c, type: 2}
   - {fileID: 11400000, guid: 4b9862d602a88ed429f750947404038b, type: 2}
   legendaryCharacters:
   - {fileID: 11400000, guid: 8c68c11be2834df4f8b993489a2eafca, type: 2}
   - {fileID: 11400000, guid: de1a160a58fe1ed47b2283acf16094bc, type: 2}
-  - {fileID: 11400000, guid: 4e702156bb17c1147a7339c9470b8d2b, type: 2}
   epicCharacters:
   - {fileID: 11400000, guid: 443a54803faff7f4686b4796a5804415, type: 2}
-  rareCharacters: []
+  rareCharacters:
+  - {fileID: 11400000, guid: 4e702156bb17c1147a7339c9470b8d2b, type: 2}
   wishCounter: {fileID: 1503031069}
   gemAmount: {fileID: 1747025197}
   sc: {fileID: 1023791772}
+  bd: {fileID: 1557993094}
   rollCost: 130
   multipleRollSale: 10
 --- !u!4 &875065378
@@ -7051,7 +7053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1023791768
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7850,7 +7852,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1557993093
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7869,7 +7871,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1000}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1557993094
@@ -7884,6 +7886,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02f400c6f61b7747a6c5b3467af12d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 1557993095}
+  sc: {fileID: 1023791772}
+  unique: {r: 1, g: 0.1462264, b: 0.44336775, a: 1}
+  legendary: {r: 1, g: 0.72081256, b: 0.18396229, a: 1}
+  epic: {r: 0.051886797, g: 0.62419915, b: 1, a: 1}
+  rare: {r: 0.2971698, g: 1, b: 0.68728906, a: 1}
+  nothing: {r: 0.5800552, g: 0.745283, b: 0.73881364, a: 1}
 --- !u!95 &1557993095
 Animator:
   serializedVersion: 5

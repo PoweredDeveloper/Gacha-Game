@@ -9,6 +9,8 @@ public class GachaManager : MonoBehaviour
     private IDictionary<string, float> chances = new Dictionary<string, float>();
     private IDictionary<string, int> guarantees = new Dictionary<string, int>();
 
+    public List<ScriptableCharacter> droppedCharacters = new List<ScriptableCharacter>();
+
     public List<ScriptableCharacter> uniqueCharacters = new List<ScriptableCharacter>();
     public List<ScriptableCharacter> legendaryCharacters = new List<ScriptableCharacter>();
     public List<ScriptableCharacter> epicCharacters = new List<ScriptableCharacter>();
@@ -18,6 +20,7 @@ public class GachaManager : MonoBehaviour
     public Text gemAmount;
 
     public SplashController sc;
+    public BoxDrop bd;
 
     public int rollCost = 130;
     public int multipleRollSale = 10;
@@ -46,7 +49,7 @@ public class GachaManager : MonoBehaviour
 
         wishCounter.text = "Wished: " + wished.ToString();
 
-        gems = PlayerPrefs.GetInt("gemAmount", 9999);
+        gems = PlayerPrefs.GetInt("gemAmount", 0);
 
         gemAmount.text = 'x' + gems.ToString();
 
@@ -54,6 +57,8 @@ public class GachaManager : MonoBehaviour
         lastLegendary = PlayerPrefs.GetInt("lastLegendary", 0);
         lastEpic = PlayerPrefs.GetInt("lastEpic", 0);
         lastRare = PlayerPrefs.GetInt("lastRare", 0);
+
+        sc.gameObject.SetActive(true);
     }
 
     public void ToGame()
@@ -63,14 +68,19 @@ public class GachaManager : MonoBehaviour
 
     public void rollOnce()
     {
+        droppedCharacters.Clear();    
+
         if (gems < rollCost) return;
         spendGems(rollCost);
         dropCharacter(randomNumber());
         sc.Load();
+        bd.Drop(getHighestDropped());
     }
 
     public void rollMultiple()
     {
+        droppedCharacters.Clear();
+
         if (gems < rollCost * 9) return;
         spendGems(rollCost * 9);
 
@@ -78,6 +88,9 @@ public class GachaManager : MonoBehaviour
         {
             dropCharacter(randomNumber());
         }
+
+        sc.Load();
+        bd.Drop(getHighestDropped());
     }
 
     private void dropCharacter(float randNumber)
@@ -126,6 +139,7 @@ public class GachaManager : MonoBehaviour
                 break;
             }
         }
+        droppedCharacters.Add(character);
         Debug.Log(character);
         UpdatePrefs();
     }
@@ -152,5 +166,23 @@ public class GachaManager : MonoBehaviour
 
         wishCounter.text = "Wished: " + wished.ToString();
         gemAmount.text = 'x' + gems.ToString();
+    }
+
+    private string getHighestDropped()
+    {
+        int highestChar = 0;
+        foreach (ScriptableCharacter ch in droppedCharacters)
+        {
+            if (ch.rarity > highestChar) highestChar = ch.rarity;
+        }
+
+        switch (highestChar)
+        {
+            case 3: return "rare";
+            case 4: return "epic";
+            case 5: return "legendary";
+            case 6: return "unique";
+            default: return "nothing";
+        }
     }
 }

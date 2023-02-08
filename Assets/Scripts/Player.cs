@@ -76,6 +76,8 @@ public class Player : MonoBehaviour
             isDust = false;
             RotateCharacter(lastRotatedLeft ? new Vector3(0, 180, 0) : Vector3.zero, rotationSpeed);
         }
+
+        if (vertical == 0) RotateCharacter(lastRotatedLeft ? new Vector3(0, 180, 0) : Vector3.zero, rotationSpeed);
     }
 
     private void FixedUpdate()
